@@ -1,16 +1,17 @@
 import java.util.*;
 import java.awt.*;
-public class Gladius{//Rotation is weird
+public class Gladius{//Rotation is cw
    public static void main(String[] args)
    {
-      Gladius james = new Gladius(300,200,0,1000,500,"james");
-      Gladius jakob = new Gladius(300,300,0,1000,500,"jakob");
+      //testing random code 'n stuff
+	  Gladius james = new Gladius(300,300,0,1000,500,"james");
+      Gladius jakob = new Gladius(400,400,235,1000,500,"jakob");
       System.out.println(jakob.sees(james));
-      jakob.toStringMat();
-      james.toStringMat();
-      crossOver(james,jakob).toStringMat();
-      
+      System.out.println("relX is " + jakob.getCoordEnemy(james)[0]);
+      System.out.println("relY is " + jakob.getCoordEnemy(james)[1]);
    }
+   
+   //creates child w/ 2 crossover points
    public static Gladius crossOver(Gladius one, Gladius two)
    {
       double[][] tc1;
@@ -320,8 +321,8 @@ public class Gladius{//Rotation is weird
       list[0] = bob.getX() - x;
       list[1] = bob.getY() - y;
       return list;
-      
    }
+   
    public int feedForward()
     {
         //add the products
