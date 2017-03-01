@@ -4,7 +4,7 @@ public class Gladius{//Rotation is cw
    public static void main(String[] args)
    {
       //testing random code 'n stuff
-	  Gladius james = new Gladius(300,300,0,1000,500,"james");
+      Gladius james = new Gladius(300,300,0,1000,500,"james");
       Gladius jakob = new Gladius(400,400,235,1000,500,"jakob");
       System.out.println(jakob.sees(james));
       System.out.println("relX is " + jakob.getCoordEnemy(james)[0]);
