@@ -18,8 +18,24 @@ public class Gladius {// Rotation is cw
             battle(gen[i], gen[j]);
          }
       }
+      System.out.println("Fitness values ");
       for (int i = 0; i < gen.length; i++) {
-         System.out.print(gen[i].getFitness() + ", ");
+         System.out.print(i + ":--" + gen[i].getFitness() + ", ");
+      }
+      System.out.println();
+      System.out.println("X values ");
+      for (int i = 0; i < gen.length; i++) {
+         System.out.print(i + ":--" + gen[i].getX() + ", ");
+      }
+      System.out.println();
+      System.out.println("Y values ");
+      for (int i = 0; i < gen.length; i++) {
+         System.out.print(i + ":--" + gen[i].getY() + ", ");
+      }
+      System.out.println();
+      System.out.println("Rotation values ");
+      for (int i = 0; i < gen.length; i++) {
+         System.out.print(i + ":--" + (int)gen[i].getRotation() + ", ");
       }
    }
 
@@ -85,10 +101,8 @@ public class Gladius {// Rotation is cw
       for (int i = 0; i < iter; i++) {
          one.sees(two);
          two.sees(one);
-         one.feedForward();
-         two.feedForward();
          one.act();
-         two.act();
+         two.act(); 
       }
    }
 
@@ -186,11 +200,6 @@ public class Gladius {// Rotation is cw
          }
 
       }
-
-      System.out.println();
-      System.out.println("spot1 is " + spot1);
-      System.out.println("spot2 is " + spot2);
-      System.out.println();
       return new Gladius((int) (Math.random() * one.worldW), (int) (Math.random() * one.worldH), Math.random() * 360,
             one.worldW, one.worldH, "child", tc1, tc2, tc3, 0);
       // random slice = 2
@@ -224,6 +233,18 @@ public class Gladius {// Rotation is cw
 
       return unRolled;
    }
+   
+   void updateX() {
+      int xInc = (int) (Math.cos((rotation / 180 * Math.PI)) * 5);
+      x = x + xInc;
+      xInc = 0;
+   }
+   
+   void updateY() {
+      int yInc = (int) (Math.sin((rotation / 180 * Math.PI)) * 5);
+      y = y + yInc;
+      yInc = 0;
+   }
 
    void act() {
 
@@ -235,10 +256,8 @@ public class Gladius {// Rotation is cw
          break;
       }
       case 1: {
-         int xInc = (int) (Math.cos((rotation / 180 * Math.PI) * 5));
-         int yInc = (int) (Math.sin((rotation / 180 * Math.PI) * 5));
-         x += xInc;
-         y += yInc;
+         updateX();
+         updateY();
          if (inCone == 1) {
             fitness++;
          }
@@ -326,6 +345,9 @@ public class Gladius {// Rotation is cw
       Polygon poly = new Polygon(xs, ys, 3);
       if (poly.contains(enemyX, enemyY)) {
          inCone = 1;
+      }
+      else {
+         inCone = 0;
       }
    }
 
