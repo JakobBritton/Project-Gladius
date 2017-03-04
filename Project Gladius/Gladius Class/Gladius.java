@@ -4,11 +4,43 @@ public class Gladius{//Rotation is cw
    public static void main(String[] args)
    {
       //testing random code 'n stuff
-      Gladius james = new Gladius(300,300,0,1000,500,"james");
-      Gladius jakob = new Gladius(400,400,235,1000,500,"jakob");
+	  Gladius james = new Gladius(300,300,0,1000,500,"james");
+      Gladius jakob = new Gladius(400,400,225,1000,500,"jakob");
       System.out.println(jakob.sees(james));
       System.out.println("relX is " + jakob.getCoordEnemy(james)[0]);
       System.out.println("relY is " + jakob.getCoordEnemy(james)[1]);
+      Gladius[] gen = new Gladius[100];
+      for (int i = 0; i < 100; i++)
+      {
+    	 gen[i] = new Gladius((int)Math.random()*1000, (int)Math.random()*1000, Math.random()*360, 1000, 1000, Integer.toString(i));
+      }
+   }
+   
+   //creates array of mates w/ number of each individual based
+   //on their fitness level
+   public ArrayList<Gladius> matingPool(Gladius organism)
+   {
+	  ArrayList<Gladius> pool = new ArrayList<Gladius>();
+	  for (int i = 0; i < organism.fitness(); i++)			//need to write or include fitness()
+	  {
+		 pool.add(organism);
+	  }
+	  return pool;
+   }
+   
+   public Gladius[] pair(ArrayList<Gladius> mates)
+   {
+      Gladius[] pair = new Gladius[2];
+      int first = 0;
+      int second = 0;
+      while (first == second)
+      {
+         first = (int)Math.random()*100;
+         second = (int)Math.random()*100;
+      }
+	  pair[0] = mates.get(first);
+	  pair[1] = mates.get(second);
+	  return pair;
    }
    
    //creates child w/ 2 crossover points
