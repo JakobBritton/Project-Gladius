@@ -12,7 +12,11 @@ public class Gladius {// Rotation is cw
          gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 1000, Math.random() * 360, 1000, 1000,
                Integer.toString(i), 0);
       }
-
+      
+      PrintWriter pw = new PrintWriter(new File("Fitness.csv"));
+      StringBuilder sb = new StringBuilder();
+      String ColumnNamesList = "Fitness";
+      sb.append(ColumnNamesList + "\n");
       for (int i = 0; i < 10; i++) {
          // each organism in gen fights each other
          for (int p = 0; p < gen.length; p++) {
@@ -21,16 +25,12 @@ public class Gladius {// Rotation is cw
             }
          }
          // output fitness to csv file
-         PrintWriter pw = new PrintWriter(new File("Fitness" + Integer.toString(i) + ".csv"));
-         StringBuilder sb = new StringBuilder();
-         String ColumnNamesList = "Fitness";
-         sb.append(ColumnNamesList + "\n");
+         int genFit = 0;
          for (int d = 0; d < 100; d++) {
-            sb.append(Double.toString(gen[d].getFitness()) + ",");
-            sb.append('\n');
+            genFit += gen[d].getFitness();
          }
-         pw.write(sb.toString());
-         pw.close();
+         sb.append(Double.toString(genFit) + ",");
+         sb.append('\n');
          // create mating pool
          Gladius[] tempGen = new Gladius[100];
          for (int g = 0; g < 100; g++) {
@@ -43,6 +43,8 @@ public class Gladius {// Rotation is cw
             gen[k] = tempGen[k];
          }
       }
+      pw.write(sb.toString());
+      pw.close();
    }
 
    // new gladius w/ random weights
