@@ -13,27 +13,36 @@ public class Gladius {// Rotation is cw
                Integer.toString(i), 0);
       }
 
-      // each organism fights each other
-      for (int i = 0; i < gen.length; i++) {
-         for (int j = 0; j < gen.length; j++) {
-            battle(gen[i], gen[j]);
+      for (int i = 0; i < 10; i++) {
+         // each organism in gen fights each other
+         for (int p = 0; p < gen.length; p++) {
+            for (int j = 0; j < gen.length; j++) {
+               battle(gen[p], gen[j]);
+            }
+         }
+         // output fitness to csv file
+         PrintWriter pw = new PrintWriter(new File("Fitness" + Integer.toString(i) + ".csv"));
+         StringBuilder sb = new StringBuilder();
+         String ColumnNamesList = "Fitness";
+         sb.append(ColumnNamesList + "\n");
+         for (int d = 0; d < 100; d++) {
+            sb.append(Double.toString(gen[d].getFitness()) + ",");
+            sb.append('\n');
+         }
+         pw.write(sb.toString());
+         pw.close();
+         // create mating pool
+         Gladius[] tempGen = new Gladius[100];
+         for (int g = 0; g < 100; g++) {
+            Gladius[] pair = pairMates(matingPool(ranking(gen))); 
+            //crossover pairs
+            tempGen[g] = crossOver(pair[0], pair[1]);
+         }
+         //fill gen with tempGen
+         for (int k = 0; k < 100; k++) {
+            gen[k] = tempGen[k];
          }
       }
-
-      // output stuff to csv file
-      PrintWriter pw = new PrintWriter(new File("FitnessXYRotation.csv"));
-      StringBuilder sb = new StringBuilder();
-      String ColumnNamesList = "Fitness, X, Y, Rotation";
-      sb.append(ColumnNamesList + "\n");
-      for (int i = 0; i < 100; i++) {
-         sb.append(Double.toString(gen[i].getFitness()) + ",");
-         sb.append(Integer.toString(gen[i].getX()) + ",");
-         sb.append(Integer.toString(gen[i].getY()) + ",");
-         sb.append(Double.toString(gen[i].getRotation()) + ",");
-         sb.append('\n');
-      }
-      pw.write(sb.toString());
-      pw.close();
    }
 
    // new gladius w/ random weights
@@ -106,9 +115,8 @@ public class Gladius {// Rotation is cw
       }
    }
 
-   //order the generation by fitness
-   public Gladius[] ranking(Gladius[] generation) {
-      Gladius[] rank = new Gladius[100];
+   // order the generation by fitness
+   public static Gladius[] ranking(Gladius[] generation) {
       Gladius temp;
       for (int i = 1; i < generation.length; i++) {
          for (int j = i; j > 0; j--) {
@@ -119,29 +127,25 @@ public class Gladius {// Rotation is cw
             }
          }
       }
-      return rank;
+      return generation;
    }
 
    // creates arrayList of mates w/ number of each individual based
    // on their fitness level
-   public ArrayList<Gladius> matingPool(Gladius[] ranked) {
+   public static ArrayList<Gladius> matingPool(Gladius[] ranked) {
       ArrayList<Gladius> pool = new ArrayList<Gladius>();
       for (int i = 0; i < 100; i++) {
          for (int j = 0; j <= i; j++) {
-            pool.add(ranked[i]); 
+            pool.add(ranked[i]);
          }
       }
       return pool;
    }
 
-   public Gladius[] pairMates(ArrayList<Gladius> mates) {
+   public static Gladius[] pairMates(ArrayList<Gladius> mates) {
       Gladius[] pair = new Gladius[2];
-      int first = 0;
-      int second = 0;
-      while (first == second) {
-         first = (int) Math.random() * 100;
-         second = (int) Math.random() * 100;
-      }
+      int first = (int)Math.random()*5050;
+      int second = (int)Math.random()*5050;
       pair[0] = mates.get(first);
       pair[1] = mates.get(second);
       return pair;
