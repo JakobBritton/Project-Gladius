@@ -12,12 +12,17 @@ public class Gladius {// Rotation is cw
          gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 1000, Math.random() * 360, 1000, 1000,
                Integer.toString(i), 0);
       }
-      
-      PrintWriter pw = new PrintWriter(new File("Fitness.csv"));
-      StringBuilder sb = new StringBuilder();
-      String ColumnNamesList = "Fitness";
-      sb.append(ColumnNamesList + "\n");
-      for (int i = 0; i < 10; i++) {
+      // setup csv file
+      PrintWriter pwTotalFitness = new PrintWriter(new File("Fitness.csv"));
+      StringBuilder sbTotalFitness = new StringBuilder();
+      String fitnessColumnNamesList = "Fitness";
+      sbTotalFitness.append(fitnessColumnNamesList + "\n");
+      PrintWriter pwAction = new PrintWriter(new File("Actions.csv"));
+      StringBuilder sbAction = new StringBuilder();
+      String ActionColumnList = "Attack,Forward,Turn Left, Turn Right";
+      sbAction.append(ActionColumnList + "\n");
+      for (int i = 0; i < 100; i++) {
+         System.out.println("Generation " + Integer.toString(i));
          // each organism in gen fights each other
          for (int p = 0; p < gen.length; p++) {
             for (int j = 0; j < gen.length; j++) {
@@ -29,22 +34,23 @@ public class Gladius {// Rotation is cw
          for (int d = 0; d < 100; d++) {
             genFit += gen[d].getFitness();
          }
-         sb.append(Double.toString(genFit) + ",");
-         sb.append('\n');
+         sbTotalFitness.append(Double.toString(genFit) + ",");
+         sbTotalFitness.append('\n');
          // create mating pool
          Gladius[] tempGen = new Gladius[100];
          for (int g = 0; g < 100; g++) {
-            Gladius[] pair = pairMates(matingPool(ranking(gen))); 
-            //crossover pairs
+            Gladius[] pair = pairMates(matingPool(ranking(gen)));
+            // crossover pairs
             tempGen[g] = crossOver(pair[0], pair[1]);
          }
-         //fill gen with tempGen
+         // fill gen with tempGen
          for (int k = 0; k < 100; k++) {
             gen[k] = tempGen[k];
          }
+
       }
-      pw.write(sb.toString());
-      pw.close();
+      pwTotalFitness.write(sbTotalFitness.toString());
+      pwTotalFitness.close();
    }
 
    // new gladius w/ random weights
@@ -107,6 +113,14 @@ public class Gladius {// Rotation is cw
 
    }
 
+   double getRelX() {
+      return relX;
+   }
+
+   double getRelY() {
+      return relY;
+   }
+
    public static void battle(Gladius one, Gladius two) {
       int iter = 100;
       for (int i = 0; i < iter; i++) {
@@ -146,8 +160,11 @@ public class Gladius {// Rotation is cw
 
    public static Gladius[] pairMates(ArrayList<Gladius> mates) {
       Gladius[] pair = new Gladius[2];
-      int first = (int)Math.random()*5050;
-      int second = (int)Math.random()*5050;
+      int first = (int) (Math.random() * 5049);
+      int second = (int) (Math.random() * 5049);
+      while (first == second) {
+         second = (int) (Math.random() * 5049);
+      }
       pair[0] = mates.get(first);
       pair[1] = mates.get(second);
       return pair;
@@ -282,7 +299,10 @@ public class Gladius {// Rotation is cw
    void act() {
 
       int decision = feedForward(); // 0 Attack, 1 Forward, 2 Left, 3 Right::
-                                    // decision
+      
+      
+      
+      // decision
       switch (decision) {
       case 0: {
          // attack
@@ -379,19 +399,13 @@ public class Gladius {// Rotation is cw
       Polygon poly = new Polygon(xs, ys, 3);
       if (poly.contains(enemyX, enemyY)) {
          inCone = 1;
+         relX = enemyX - x;
+         relY = y - enemyY;
       } else {
          inCone = 0;
+         relX = 1000000;
+         relY = 1000000;
       }
-   }
-
-   int[] getCoordEnemy(Gladius bob) // getting the rel coord
-   {
-      int[] list = new int[2];
-      // I: +,- II: -,- III: -,+ IV: +,+// sign of the array based on quadrants
-      // relative to the Gladius
-      list[0] = bob.getX() - x;
-      list[1] = bob.getY() - y;
-      return list;
    }
 
    public int feedForward() {
