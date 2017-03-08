@@ -21,7 +21,7 @@ public class Gladius {// Rotation is cw
       StringBuilder sbAction = new StringBuilder();
       String ActionColumnList = "Attack,Forward,Turn Left, Turn Right";
       sbAction.append(ActionColumnList + "\n");
-      for (int i = 0; i < 100; i++) {
+      for (int i = 0; i < 10; i++) {
          System.out.println("Generation " + Integer.toString(i));
          // each organism in gen fights each other
          for (int p = 0; p < gen.length; p++) {
