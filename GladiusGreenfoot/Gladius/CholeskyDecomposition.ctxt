@@ -1,0 +1,16 @@
+#BlueJ class context
+comment0.target=CholeskyDecomposition
+comment0.text=\ Cholesky\ Decomposition.\r\n\ \ \ <P>\r\n\ \ \ For\ a\ symmetric,\ positive\ definite\ matrix\ A,\ the\ Cholesky\ decomposition\r\n\ \ \ is\ an\ lower\ triangular\ matrix\ L\ so\ that\ A\ \=\ L*L'.\r\n\ \ \ <P>\r\n\ \ \ If\ the\ matrix\ is\ not\ symmetric\ or\ positive\ definite,\ the\ constructor\r\n\ \ \ returns\ a\ partial\ decomposition\ and\ sets\ an\ internal\ flag\ that\ may\r\n\ \ \ be\ queried\ by\ the\ isSPD()\ method.\r\n
+comment1.params=Arg
+comment1.target=CholeskyDecomposition(Matrix)
+comment1.text=\ Cholesky\ algorithm\ for\ symmetric\ and\ positive\ definite\ matrix.\r\n\ \ \ \ \ \ \ Structure\ to\ access\ L\ and\ isspd\ flag.\r\n\ \ \ @param\ \ Arg\ \ \ Square,\ symmetric\ matrix.\r\n
+comment2.params=
+comment2.target=boolean\ isSPD()
+comment2.text=\ Is\ the\ matrix\ symmetric\ and\ positive\ definite?\r\n\ \ \ @return\ \ \ \ \ true\ if\ A\ is\ symmetric\ and\ positive\ definite.\r\n
+comment3.params=
+comment3.target=Matrix\ getL()
+comment3.text=\ Return\ triangular\ factor.\r\n\ \ \ @return\ \ \ \ \ L\r\n
+comment4.params=B
+comment4.target=Matrix\ solve(Matrix)
+comment4.text=\ Solve\ A*X\ \=\ B\r\n\ \ \ @param\ \ B\ \ \ A\ Matrix\ with\ as\ many\ rows\ as\ A\ and\ any\ number\ of\ columns.\r\n\ \ \ @return\ \ \ \ \ X\ so\ that\ L*L'*X\ \=\ B\r\n\ \ \ @exception\ \ IllegalArgumentException\ \ Matrix\ row\ dimensions\ must\ agree.\r\n\ \ \ @exception\ \ RuntimeException\ \ Matrix\ is\ not\ symmetric\ positive\ definite.\r\n
+numComments=5

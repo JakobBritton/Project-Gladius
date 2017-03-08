@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=QRDecomposition
+comment0.text=\ QR\ Decomposition.\r\n<P>\r\n\ \ \ For\ an\ m-by-n\ matrix\ A\ with\ m\ >\=\ n,\ the\ QR\ decomposition\ is\ an\ m-by-n\r\n\ \ \ orthogonal\ matrix\ Q\ and\ an\ n-by-n\ upper\ triangular\ matrix\ R\ so\ that\r\n\ \ \ A\ \=\ Q*R.\r\n<P>\r\n\ \ \ The\ QR\ decompostion\ always\ exists,\ even\ if\ the\ matrix\ does\ not\ have\r\n\ \ \ full\ rank,\ so\ the\ constructor\ will\ never\ fail.\ \ The\ primary\ use\ of\ the\r\n\ \ \ QR\ decomposition\ is\ in\ the\ least\ squares\ solution\ of\ nonsquare\ systems\r\n\ \ \ of\ simultaneous\ linear\ equations.\ \ This\ will\ fail\ if\ isFullRank()\r\n\ \ \ returns\ false.\r\n
+comment1.params=A
+comment1.target=QRDecomposition(Matrix)
+comment1.text=\ QR\ Decomposition,\ computed\ by\ Householder\ reflections.\r\n\ \ \ \ \ \ \ Structure\ to\ access\ R\ and\ the\ Householder\ vectors\ and\ compute\ Q.\r\n\ \ \ @param\ A\ \ \ \ Rectangular\ matrix\r\n
+comment2.params=
+comment2.target=boolean\ isFullRank()
+comment2.text=\ Is\ the\ matrix\ full\ rank?\r\n\ \ \ @return\ \ \ \ \ true\ if\ R,\ and\ hence\ A,\ has\ full\ rank.\r\n
+comment3.params=
+comment3.target=Matrix\ getH()
+comment3.text=\ Return\ the\ Householder\ vectors\r\n\ \ \ @return\ \ \ \ \ Lower\ trapezoidal\ matrix\ whose\ columns\ define\ the\ reflections\r\n
+comment4.params=
+comment4.target=Matrix\ getR()
+comment4.text=\ Return\ the\ upper\ triangular\ factor\r\n\ \ \ @return\ \ \ \ \ R\r\n
+comment5.params=
+comment5.target=Matrix\ getQ()
+comment5.text=\ Generate\ and\ return\ the\ (economy-sized)\ orthogonal\ factor\r\n\ \ \ @return\ \ \ \ \ Q\r\n
+comment6.params=B
+comment6.target=Matrix\ solve(Matrix)
+comment6.text=\ Least\ squares\ solution\ of\ A*X\ \=\ B\r\n\ \ \ @param\ B\ \ \ \ A\ Matrix\ with\ as\ many\ rows\ as\ A\ and\ any\ number\ of\ columns.\r\n\ \ \ @return\ \ \ \ \ X\ that\ minimizes\ the\ two\ norm\ of\ Q*R*X-B.\r\n\ \ \ @exception\ \ IllegalArgumentException\ \ Matrix\ row\ dimensions\ must\ agree.\r\n\ \ \ @exception\ \ RuntimeException\ \ Matrix\ is\ rank\ deficient.\r\n
+numComments=7

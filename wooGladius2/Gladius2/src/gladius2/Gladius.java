@@ -1,3 +1,5 @@
+package gladius2;
+
 import java.util.*;
 import java.awt.*;
 import java.io.File;
@@ -9,39 +11,69 @@ public class Gladius {// Rotation is cw
       // make new generation
       Gladius[] gen = new Gladius[100];
       for (int i = 0; i < 100; i++) { // make generation of 100 randoms
-         gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 1000, Math.random() * 360, 1000, 1000,
+         gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 500, Math.random() * 360, 1000, 500,
                Integer.toString(i), 0);
       }
       // setup csv file
-      PrintWriter pwTotalFitness = new PrintWriter(new File("Fitness.csv"));
+      PrintWriter pwTotalFitness = new PrintWriter(new File("Fitness6.csv"));
       StringBuilder sbTotalFitness = new StringBuilder();
       String fitnessColumnNamesList = "Fitness";
       sbTotalFitness.append(fitnessColumnNamesList + "\n");
-      PrintWriter pwAction = new PrintWriter(new File("Actions.csv"));
+      PrintWriter pwAction = new PrintWriter(new File("Actions6.csv"));
       StringBuilder sbAction = new StringBuilder();
-      String ActionColumnList = "Attack,Forward,Turn Left, Turn Right";
+      String ActionColumnList = "Attack,Forward,Turn L, Turn R";
       sbAction.append(ActionColumnList + "\n");
-      for (int i = 0; i < 10; i++) {
-         System.out.println("Generation " + Integer.toString(i));
+      for (int i = 0; i < 100; i++) {
+         System.out.println("Generation " + Integer.toString(i+1));
+         
+         int attacks = 0;
+         int lefts = 0;
+         int rights = 0;
+         int forwards = 0;
          // each organism in gen fights each other
          for (int p = 0; p < gen.length; p++) {
             for (int j = 0; j < gen.length; j++) {
                battle(gen[p], gen[j]);
+               if(gen[p].action.equals("attack"))
+               {
+                   attacks++;
+               }
+               else if(gen[p].action.equals("forward"))
+               {
+                   forwards++;
+               }
+               else if(gen[p].action.equals("left"))
+               {
+                   lefts++;
+               }
+               else
+               {
+                   rights++;
+               }
             }
          }
+         
+         sbAction.append(attacks + "," + forwards + "," + lefts + "," + rights + "\n");
          // output fitness to csv file
          int genFit = 0;
          for (int d = 0; d < 100; d++) {
             genFit += gen[d].getFitness();
          }
+         
          sbTotalFitness.append(Double.toString(genFit) + ",");
-         sbTotalFitness.append('\n');
+         sbTotalFitness.append("\n");
          // create mating pool
          Gladius[] tempGen = new Gladius[100];
          for (int g = 0; g < 100; g++) {
             Gladius[] pair = pairMates(matingPool(ranking(gen)));
             // crossover pairs
+            pair[0].toStringMat();
+            System.out.println("*********************");
+            pair[1].toStringMat();
+            System.out.println("*********************");
             tempGen[g] = crossOver(pair[0], pair[1]);
+            tempGen[g].toStringMat();
+            System.out.println("*********************");
          }
          // fill gen with tempGen
          for (int k = 0; k < 100; k++) {
@@ -49,15 +81,19 @@ public class Gladius {// Rotation is cw
          }
 
       }
+      pwAction.write(sbAction.toString());
+      pwAction.close();
       pwTotalFitness.write(sbTotalFitness.toString());
       pwTotalFitness.close();
    }
 
    // new gladius w/ random weights
+   
    int worldW, worldH;
    int x;
    int y;
    double rotation;
+   String action;
    String name;
    double[][] theta1;
    double[][] theta2;
@@ -122,12 +158,21 @@ public class Gladius {// Rotation is cw
    }
 
    public static void battle(Gladius one, Gladius two) {
-      int iter = 100;
+      int iter = 120;
       for (int i = 0; i < iter; i++) {
          one.sees(two);
          two.sees(one);
          one.act();
          two.act();
+         if(i == 60)
+         {
+            one.setX((int)(Math.random() * one.worldW));
+            one.setY((int)(Math.random() * one.worldH));
+            one.setRotation(Math.random() * 360);
+            two.setX((int)(Math.random() * two.worldW));
+            two.setY((int)(Math.random() * two.worldH));
+            two.setRotation(Math.random() * 360);
+         }
       }
    }
 
@@ -189,38 +234,40 @@ public class Gladius {// Rotation is cw
       double[] unrolledTwo = unRoll(twoT1, twoT2, twoT3);
       double[] childU = new double[44];
       int spot1 = (int) (Math.random() * 43) + 1;
-      int spot2 = (int) (Math.random() * 43) + 1;
-      while (spot1 == spot2) {
-         spot2 = (int) (Math.random() * 43) + 1;
+      int half = (int) (Math.random() * 2);
+      if(half == 0)
+      {
+          System.out.println("1");
+          for(int i = 0; i < spot1; i++)
+          {
+              childU[i] = unrolledOne[i];
+              
+          }
+          for(int i = spot1; i < 44; i++)
+          {
+              childU[i] = unrolledTwo[i];
 
+          }
       }
-      if (spot1 > spot2) {
-         for (int i = 0; i < spot2; i++) {
-            childU[i] = unrolledTwo[i];
-         }
-         for (int i = spot2; i < spot1; i++) {
-            childU[i] = unrolledOne[i];
-         }
-         for (int i = spot1; i < 44; i++) {
-            childU[i] = unrolledTwo[i];
-         }
-      } else {
-         for (int i = 0; i < spot1; i++) {
-            childU[i] = unrolledOne[i];
-         }
-         for (int i = spot1; i < spot2; i++) {
-            childU[i] = unrolledTwo[i];
-         }
-         for (int i = spot2; i < 44; i++) {
-            childU[i] = unrolledOne[i];
+      else
+      {
+          System.out.println("2");
+          for(int i = 0; i < spot1; i++)
+          {
+              childU[i] = unrolledTwo[i];
+              
+          }
+          for(int i = spot1; i < 44; i++)
+          {
+              childU[i] = unrolledOne[i];
 
-         }
-
+          }
       }
+      
       for (int r = 0; r < 3; r++) {
          for (int c = 0; c < 4; c++) {
             double rand = Math.random();
-            if (rand >= .995) {
+            if (rand >= .99) {
                tc1[r][c] = Math.random() * 1.1547001 - .5773502692;
             } else {
                tc1[r][c] = childU[c + r * 4];
@@ -295,7 +342,14 @@ public class Gladius {// Rotation is cw
       y = y + yInc;
       yInc = 0;
    }
-
+   void setX(int x)
+   {
+       this.x = x;
+   }
+   void setY(int y)
+   {
+       this.y = y;
+   }
    void act() {
 
       int decision = feedForward(); // 0 Attack, 1 Forward, 2 Left, 3 Right::
@@ -306,22 +360,26 @@ public class Gladius {// Rotation is cw
       switch (decision) {
       case 0: {
          // attack
+         action = "attack";
          break;
       }
       case 1: {
          updateX();
          updateY();
+         action = "forward";
          if (inCone == 1) {
             fitness++;
          }
          break;
       }
       case 2: {
-         rotation -= 5;
+         action = "left";
+         rotation -= 20;
          break;
       }
       case 3: {
-         rotation += 5;
+         action = "right";
+         rotation += 20;
          break;
       }
       default:
@@ -398,6 +456,7 @@ public class Gladius {// Rotation is cw
       ys[2] = (int) (Math.sin((rotation / 180 * Math.PI) + Math.PI * .08) * 1200) + y;
       Polygon poly = new Polygon(xs, ys, 3);
       if (poly.contains(enemyX, enemyY)) {
+         fitness++;
          inCone = 1;
          relX = enemyX - x;
          relY = y - enemyY;
