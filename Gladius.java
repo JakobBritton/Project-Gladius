@@ -9,8 +9,10 @@ import java.io.PrintWriter;
 public class Gladius {// Rotation is cw
    public static void main(String[] args) throws FileNotFoundException {
       // make new generation
-      Gladius[] gen = new Gladius[100];
-      for (int i = 0; i < 100; i++) { // make generation of 100 randoms
+	  int populationSize = 200;
+	  int generations = 100;
+      Gladius[] gen = new Gladius[populationSize];
+      for (int i = 0; i < populationSize; i++) { // make generation of 100 randoms
          gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 500, Math.random() * 360, 1000, 500,
                Integer.toString(i), 0);
       }
@@ -25,7 +27,7 @@ public class Gladius {// Rotation is cw
       StringBuilder sbAction = new StringBuilder();
       String ActionColumnList = "Attack,Forward,Turn L, Turn R";
       sbAction.append(ActionColumnList + "\n");
-      for (int i = 0; i < 1000; i++) {
+      for (int i = 0; i < generations; i++) {
          System.out.println("Generation: " + Integer.toString(i+1));
          sbWeights.append("Generation: " + Integer.toString(i+1) +  "    *********************************************************************" + System.getProperty("line.separator"));
         
@@ -59,24 +61,25 @@ public class Gladius {// Rotation is cw
          sbAction.append(attacks + "," + forwards + "," + lefts + "," + rights + "\n");
          // output fitness to csv file
          int genFit = 0;
-         for (int d = 0; d < 100; d++) {
+         for (int d = 0; d < populationSize; d++) {
             genFit += gen[d].getFitness();
          }
          
          sbTotalFitness.append(Double.toString(genFit) + ",");
          sbTotalFitness.append("\n");
          // create mating pool
-         Gladius[] tempGen = new Gladius[100];
+         Gladius[] tempGen = new Gladius[populationSize];
          Gladius[] mostFit = ranking(gen);
-         for(int q = 0; q < 100; q++)
+         for(int q = 0; q < populationSize; q+=4)
          {
         	 sbWeights.append(mostFit[q].toStringMat() + System.getProperty("line.separator"));
          }
          mostFit[0].toStringMat();
-         mostFit[25].toStringMat();
-         mostFit[50].toStringMat();
-         mostFit[75].toStringMat();
-         for (int g = 0; g < 100; g++) {
+         mostFit[populationSize/4].toStringMat();
+         mostFit[populationSize/2].toStringMat();
+         mostFit[populationSize/4*3].toStringMat();
+         
+         for (int g = 0; g < populationSize; g++) {
             Gladius[] pair = pairMates(matingPool(ranking(gen)));
             // crossover pairs
             //pair[0].toStringMat();
@@ -88,7 +91,7 @@ public class Gladius {// Rotation is cw
             //System.out.println("*********************");
          }
          // fill gen with tempGen
-         for (int k = 0; k < 100; k++) {
+         for (int k = 0; k < populationSize; k++) {
             gen[k] = tempGen[k];
          }
 
@@ -172,7 +175,7 @@ public class Gladius {// Rotation is cw
    }
 
    public static void battle(Gladius one, Gladius two) {
-      int iter = 200;
+      int iter = 100;
       for (int i = 0; i < iter; i++) {
          one.sees(two);
          two.sees(one);
