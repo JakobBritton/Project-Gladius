@@ -1,3 +1,5 @@
+package gladius;
+
 import java.util.*;
 import java.awt.*;
 import java.io.File;
@@ -13,29 +15,51 @@ public class Gladius {// Rotation is cw
                Integer.toString(i), 0);
       }
       // setup csv file
-      PrintWriter pwTotalFitness = new PrintWriter(new File("Fitness.csv"));
+      PrintWriter pwTotalFitness = new PrintWriter(new File("Fitness1.csv"));
       StringBuilder sbTotalFitness = new StringBuilder();
       String fitnessColumnNamesList = "Fitness";
       sbTotalFitness.append(fitnessColumnNamesList + "\n");
-      PrintWriter pwAction = new PrintWriter(new File("Actions.csv"));
+      PrintWriter pwAction = new PrintWriter(new File("Actions1.csv"));
       StringBuilder sbAction = new StringBuilder();
-      String ActionColumnList = "Attack,Forward,Turn Left, Turn Right";
+      String ActionColumnList = "Attack,Forward,Turn L, Turn R";
       sbAction.append(ActionColumnList + "\n");
       for (int i = 0; i < 100; i++) {
-         System.out.println("Generation " + Integer.toString(i));
+         System.out.println("Generation " + Integer.toString(i+1));
+         int attacks = 0;
+         int lefts = 0;
+         int rights = 0;
+         int forwards = 0;
          // each organism in gen fights each other
          for (int p = 0; p < gen.length; p++) {
             for (int j = 0; j < gen.length; j++) {
                battle(gen[p], gen[j]);
+               if(gen[p].action.equals("attack"))
+               {
+                   attacks++;
+               }
+               else if(gen[p].action.equals("forward"))
+               {
+                   forwards++;
+               }
+               else if(gen[p].action.equals("left"))
+               {
+                   lefts++;
+               }
+               else
+               {
+                   rights++;
+               }
             }
          }
+         
+         sbAction.append(attacks + "," + forwards + "," + lefts + "," + rights + "\n");
          // output fitness to csv file
          int genFit = 0;
          for (int d = 0; d < 100; d++) {
             genFit += gen[d].getFitness();
          }
          sbTotalFitness.append(Double.toString(genFit) + ",");
-         sbTotalFitness.append('\n');
+         sbTotalFitness.append("\n");
          // create mating pool
          Gladius[] tempGen = new Gladius[100];
          for (int g = 0; g < 100; g++) {
@@ -49,15 +73,19 @@ public class Gladius {// Rotation is cw
          }
 
       }
+      pwAction.write(sbAction.toString());
+      pwAction.close();
       pwTotalFitness.write(sbTotalFitness.toString());
       pwTotalFitness.close();
    }
 
    // new gladius w/ random weights
+   
    int worldW, worldH;
    int x;
    int y;
    double rotation;
+   String action;
    String name;
    double[][] theta1;
    double[][] theta2;
@@ -122,12 +150,18 @@ public class Gladius {// Rotation is cw
    }
 
    public static void battle(Gladius one, Gladius two) {
-      int iter = 100;
+      int iter = 200;
       for (int i = 0; i < iter; i++) {
          one.sees(two);
          two.sees(one);
          one.act();
          two.act();
+         if(i == 101)
+         {
+            one.setX((int)(Math.random() * one.worldW));
+            one.setY((int)(Math.random() * one.worldH));
+            one.setRotation(Math.random()*360);
+         }
       }
    }
 
@@ -295,7 +329,14 @@ public class Gladius {// Rotation is cw
       y = y + yInc;
       yInc = 0;
    }
-
+    void setX(int x)
+   {
+       this.x = x;
+   }
+   void setY(int y)
+   {
+       this.y = y;
+   }
    void act() {
 
       int decision = feedForward(); // 0 Attack, 1 Forward, 2 Left, 3 Right::
@@ -306,21 +347,25 @@ public class Gladius {// Rotation is cw
       switch (decision) {
       case 0: {
          // attack
+         action = "attack";
          break;
       }
       case 1: {
          updateX();
          updateY();
+         action = "forward";
          if (inCone == 1) {
             fitness++;
          }
          break;
       }
       case 2: {
+         action = "left";
          rotation -= 5;
          break;
       }
       case 3: {
+         action = "right";
          rotation += 5;
          break;
       }
