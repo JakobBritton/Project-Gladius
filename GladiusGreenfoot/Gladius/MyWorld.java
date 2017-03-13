@@ -19,6 +19,7 @@ public class MyWorld extends World
      Scanner scanner;
      double x;
      int gah = 0;
+     int gen = 0;
     /**
      * Constructor for objects of class MyWorld.
      * 
@@ -160,6 +161,8 @@ public class MyWorld extends World
          gah++;
          if(gah == 100 && scanner.hasNextLine())
          {
+             gen++;
+             System.out.println("Generation: " + gen);
              gah = 0;
             int jamesx = Greenfoot.getRandomNumber(999)+151;
             int jamesy = Greenfoot.getRandomNumber(499)+101;
