@@ -170,7 +170,7 @@ public class MyWorld extends World
             jacob.setRotation(Greenfoot.getRandomNumber(365));
             
             
-            scanner.nextLine();
+           scanner.nextLine();
            String[][] theta1 = new String[3][4];
            theta1[0] = scanner.nextLine().split(" ");
            theta1[1] = scanner.nextLine().split(" ");
@@ -229,6 +229,8 @@ public class MyWorld extends World
                    t33[r][c] = Double.parseDouble(theta33[r][c]);
                }
            }
+           jacob.setTheta(t1,t2,t3);
+           james.setTheta(t11,t22,t33);
          }
          else if(gah == 100)
          {
