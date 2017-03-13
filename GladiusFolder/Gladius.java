@@ -603,7 +603,7 @@ public class Gladius {// Rotation is cw
 		      //bob.append("{");
 		         for (int j = 0; j < 4; j++) {
 		            //System.out.printf("%.6f ", (float) theta3[i][j]);
-		            Double gah = new Double(theta2[i][j]);
+		            Double gah = new Double(theta3[i][j]);
 		            bob.append(gah.toString().substring(0,9) + " ");
 		            //if(j!=3)
 		            //{
