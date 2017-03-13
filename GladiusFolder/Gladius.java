@@ -7,10 +7,11 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 public class Gladius {// Rotation is cw
+     public static int populationSize = 100;
+	  public static int generations = 2;
    public static void main(String[] args) throws FileNotFoundException {
       // make new generation
-	  int populationSize = 200;
-	  int generations = 100;
+	  
       Gladius[] gen = new Gladius[populationSize];
       for (int i = 0; i < populationSize; i++) { // make generation of 100 randoms
          gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 500, Math.random() * 360, 1000, 500,
@@ -24,13 +25,15 @@ public class Gladius {// Rotation is cw
       PrintWriter pwAction = new PrintWriter(new File("Actions.csv"));
       PrintWriter weights = new PrintWriter(new File("Weights.txt"));
       StringBuilder sbWeights = new StringBuilder();
+      PrintWriter formattedWeights = new PrintWriter(new File("FWeights.txt"));
+      StringBuilder sbFWeights = new StringBuilder();
       StringBuilder sbAction = new StringBuilder();
       String ActionColumnList = "Attack,Forward,Turn L, Turn R";
       sbAction.append(ActionColumnList + "\n");
       for (int i = 0; i < generations; i++) {
          System.out.println("Generation: " + Integer.toString(i+1));
          sbWeights.append("Generation: " + Integer.toString(i+1) +  "    *********************************************************************" + System.getProperty("line.separator"));
-        
+         sbFWeights.append("Generation: " + Integer.toString(i+1) + System.getProperty("line.separator"));
          int attacks = 0;
          int lefts = 0;
          int rights = 0;
@@ -70,10 +73,14 @@ public class Gladius {// Rotation is cw
          // create mating pool
          Gladius[] tempGen = new Gladius[populationSize];
          Gladius[] mostFit = ranking(gen);
-         for(int q = 0; q < populationSize; q+=4)
+         for(int q = 0; q < populationSize; q+=1)
          {
-        	 sbWeights.append(mostFit[q].toStringMat() + System.getProperty("line.separator"));
+        	 sbWeights.append((q+1) + System.getProperty("line.separator") + mostFit[q].toStringMat() + System.getProperty("line.separator"));
+          
          }
+         
+         sbFWeights.append(mostFit[populationSize-1].toStringFormattedMat());
+         sbFWeights.append(mostFit[populationSize/4*3].toStringFormattedMat());
          mostFit[0].toStringMat();
          mostFit[populationSize/4].toStringMat();
          mostFit[populationSize/2].toStringMat();
@@ -98,6 +105,8 @@ public class Gladius {// Rotation is cw
       }
       pwAction.write(sbAction.toString());
       pwAction.close();
+      formattedWeights.write(sbFWeights.toString());
+      formattedWeights.close();
       weights.write(sbWeights.toString());
       weights.close();
       pwTotalFitness.write(sbTotalFitness.toString());
@@ -212,7 +221,7 @@ public class Gladius {// Rotation is cw
    // on their fitness level
    public static ArrayList<Gladius> matingPool(Gladius[] ranked) {
       ArrayList<Gladius> pool = new ArrayList<Gladius>();
-      for (int i = 0; i < 100; i++) {
+      for (int i = 0; i < populationSize; i++) {
          for (int j = 0; j <= i; j++) {
             pool.add(ranked[i]);
          }
@@ -222,10 +231,10 @@ public class Gladius {// Rotation is cw
 
    public static Gladius[] pairMates(ArrayList<Gladius> mates) {
       Gladius[] pair = new Gladius[2];
-      int first = (int) (Math.random() * 5049);
-      int second = (int) (Math.random() * 5049);
+      int first = (int) (Math.random() * (Math.pow(populationSize,2)/2+ populationSize/2 - 1));
+      int second = (int) (Math.random() * (Math.pow(populationSize,2)/2+ populationSize/2 - 1));
       while (first == second) {
-         second = (int) (Math.random() * 5049);
+         second = (int) (Math.random() * (Math.pow(populationSize,2)/2+ populationSize/2 - 1));
       }
       pair[0] = mates.get(first);
       pair[1] = mates.get(second);
@@ -542,7 +551,80 @@ public class Gladius {// Rotation is cw
       }
       return spot;
    }
-
+   
+   public String toStringFormattedMat() {
+	   StringBuilder bob = new StringBuilder();
+	      for (int i = 0; i < 3; i++) {
+	         //System.out.print("{");
+	         //bob.append("{");
+	         for (int j = 0; j < 4; j++) {
+	            //System.out.printf("%.6f ", (float) theta1[i][j]);
+	            Double gah = new Double(theta1[i][j]);
+	            bob.append(gah.toString().substring(0,9) + " ");
+	            if(j!=3)
+	            {
+	            //System.out.print(", ");
+	            //bob.append(", ");
+	         }
+	         }
+	         //System.out.print("}");
+	         //bob.append("}");
+	         bob.append(System.getProperty("line.separator"));
+	         //System.out.println();
+	      }
+	      //System.out.println();
+	      //System.out.println();
+	      //bob.append(System.getProperty("line.separator"));
+	      bob.append(System.getProperty("line.separator"));
+	      for (int i = 0; i < 4; i++) {
+	      //System.out.print("{");
+	      //bob.append("{");
+	         for (int j = 0; j < 4; j++) {
+	            //System.out.printf("%.6f ", (float) theta2[i][j]);
+	            Double gah = new Double(theta2[i][j]);
+	            bob.append(gah.toString().substring(0,9)+ " ");
+	            //if(j!=3)
+	            //{
+	            //System.out.print(", ");
+	            //bob.append(", ");
+	            //}
+	         }
+	         //System.out.print("}");
+	         //bob.append("}");
+	         bob.append(System.getProperty("line.separator"));
+	         //System.out.println();
+	      }
+	      //System.out.println();
+	      //System.out.println();
+	      //bob.append(System.getProperty("line.separator"));
+	      bob.append(System.getProperty("line.separator"));
+	      for (int i = 0; i < 4; i++) {
+		      //System.out.print("{");
+		      //bob.append("{");
+		         for (int j = 0; j < 4; j++) {
+		            //System.out.printf("%.6f ", (float) theta3[i][j]);
+		            Double gah = new Double(theta3[i][j]);
+		            bob.append(gah.toString().substring(0,9) + " ");
+		            //if(j!=3)
+		            //{
+		            //System.out.print(", ");
+		            //bob.append(", ");
+		            //}
+		         }
+		         //System.out.print("}");
+		         //bob.append("}");
+		         bob.append(System.getProperty("line.separator"));
+		         //System.out.println();
+		      }
+		      //System.out.println();
+		      //System.out.println();
+		      //bob.append(System.getProperty("line.separator"));
+		      //bob.append(System.getProperty("line.separator"));
+	      //System.out.println("-----------------------");
+	      bob.append("----------------------------------------------");
+         bob.append(System.getProperty("line.separator"));
+	      return bob.toString();
+	   }
    public String toStringMat() {
 	   StringBuilder bob = new StringBuilder();
 	      for (int i = 0; i < 3; i++) {
