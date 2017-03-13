@@ -704,5 +704,12 @@ public class Gladius {// Rotation is cw
       }
       return activated;
    }
+   
+	public Gladius clone()
+   {
+   
+      return new Gladius(x, y, rotation, worldW, worldH, name, theta1, theta2,
+         theta3, 0);
+   }
 
 }
