@@ -1,4 +1,4 @@
-package gladius2;
+
 
 import java.util.*;
 import java.awt.*;
@@ -9,23 +9,28 @@ import java.io.PrintWriter;
 public class Gladius {// Rotation is cw
    public static void main(String[] args) throws FileNotFoundException {
       // make new generation
-      Gladius[] gen = new Gladius[100];
-      for (int i = 0; i < 100; i++) { // make generation of 100 randoms
-         gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 1000, Math.random() * 360, 1000, 1000,
+	  int populationSize = 200;
+	  int generations = 100;
+      Gladius[] gen = new Gladius[populationSize];
+      for (int i = 0; i < populationSize; i++) { // make generation of 100 randoms
+         gen[i] = new Gladius((int) Math.random() * 1000, (int) Math.random() * 500, Math.random() * 360, 1000, 500,
                Integer.toString(i), 0);
       }
       // setup csv file
-      PrintWriter pwTotalFitness = new PrintWriter(new File("Fitness5.csv"));
+      PrintWriter pwTotalFitness = new PrintWriter(new File("Fitness.csv"));
       StringBuilder sbTotalFitness = new StringBuilder();
       String fitnessColumnNamesList = "Fitness";
       sbTotalFitness.append(fitnessColumnNamesList + "\n");
-      PrintWriter pwAction = new PrintWriter(new File("Actions5.csv"));
+      PrintWriter pwAction = new PrintWriter(new File("Actions.csv"));
+      PrintWriter weights = new PrintWriter(new File("Weights.txt"));
+      StringBuilder sbWeights = new StringBuilder();
       StringBuilder sbAction = new StringBuilder();
       String ActionColumnList = "Attack,Forward,Turn L, Turn R";
       sbAction.append(ActionColumnList + "\n");
-      for (int i = 0; i < 250; i++) {
-         System.out.println("Generation " + Integer.toString(i+1));
-         
+      for (int i = 0; i < generations; i++) {
+         System.out.println("Generation: " + Integer.toString(i+1));
+         sbWeights.append("Generation: " + Integer.toString(i+1) +  "    *********************************************************************" + System.getProperty("line.separator"));
+        
          int attacks = 0;
          int lefts = 0;
          int rights = 0;
@@ -56,33 +61,45 @@ public class Gladius {// Rotation is cw
          sbAction.append(attacks + "," + forwards + "," + lefts + "," + rights + "\n");
          // output fitness to csv file
          int genFit = 0;
-         for (int d = 0; d < 100; d++) {
+         for (int d = 0; d < populationSize; d++) {
             genFit += gen[d].getFitness();
          }
          
          sbTotalFitness.append(Double.toString(genFit) + ",");
          sbTotalFitness.append("\n");
          // create mating pool
-         Gladius[] tempGen = new Gladius[100];
-         for (int g = 0; g < 100; g++) {
+         Gladius[] tempGen = new Gladius[populationSize];
+         Gladius[] mostFit = ranking(gen);
+         for(int q = 0; q < populationSize; q+=4)
+         {
+        	 sbWeights.append(mostFit[q].toStringMat() + System.getProperty("line.separator"));
+         }
+         mostFit[0].toStringMat();
+         mostFit[populationSize/4].toStringMat();
+         mostFit[populationSize/2].toStringMat();
+         mostFit[populationSize/4*3].toStringMat();
+         
+         for (int g = 0; g < populationSize; g++) {
             Gladius[] pair = pairMates(matingPool(ranking(gen)));
             // crossover pairs
-            pair[0].toStringMat();
-            System.out.println("*********************");
-            pair[1].toStringMat();
-            System.out.println("*********************");
+            //pair[0].toStringMat();
+            //System.out.println("*********************");
+            //pair[1].toStringMat();
+            //System.out.println("*********************");
             tempGen[g] = crossOver(pair[0], pair[1]);
-            tempGen[g].toStringMat();
-            System.out.println("*********************");
+            //tempGen[g].toStringMat();
+            //System.out.println("*********************");
          }
          // fill gen with tempGen
-         for (int k = 0; k < 100; k++) {
+         for (int k = 0; k < populationSize; k++) {
             gen[k] = tempGen[k];
          }
 
       }
       pwAction.write(sbAction.toString());
       pwAction.close();
+      weights.write(sbWeights.toString());
+      weights.close();
       pwTotalFitness.write(sbTotalFitness.toString());
       pwTotalFitness.close();
    }
@@ -158,13 +175,13 @@ public class Gladius {// Rotation is cw
    }
 
    public static void battle(Gladius one, Gladius two) {
-      int iter = 1000;
+      int iter = 100;
       for (int i = 0; i < iter; i++) {
          one.sees(two);
          two.sees(one);
          one.act();
          two.act();
-         if(i == 500)
+         if(i == 300)
          {
             one.setX((int)(Math.random() * one.worldW));
             one.setY((int)(Math.random() * one.worldH));
@@ -234,36 +251,34 @@ public class Gladius {// Rotation is cw
       double[] unrolledTwo = unRoll(twoT1, twoT2, twoT3);
       double[] childU = new double[44];
       int spot1 = (int) (Math.random() * 43) + 1;
-      int half = (int) (Math.random() * 2);
-      if(half == 0)
-      {
-          System.out.println("1");
-          for(int i = 0; i < spot1; i++)
-          {
-              childU[i] = unrolledOne[i];
-              
-          }
-          for(int i = spot1; i < 44; i++)
-          {
-              childU[i] = unrolledTwo[i];
+      int spot2 = (int) (Math.random() * 43) + 1;
+      while (spot1 == spot2) {
+         spot2 = (int) (Math.random() * 43) + 1;
 
-          }
       }
-      else
-      {
-          System.out.println("2");
-          for(int i = 0; i < spot1; i++)
-          {
-              childU[i] = unrolledTwo[i];
-              
-          }
-          for(int i = spot1; i < 44; i++)
-          {
-              childU[i] = unrolledOne[i];
+      if (spot1 > spot2) {
+         for (int i = 0; i < spot2; i++) {
+            childU[i] = unrolledTwo[i];
+         }
+         for (int i = spot2; i < spot1; i++) {
+            childU[i] = unrolledOne[i];
+         }
+         for (int i = spot1; i < 44; i++) {
+            childU[i] = unrolledTwo[i];
+         }
+      } else {
+         for (int i = 0; i < spot1; i++) {
+            childU[i] = unrolledOne[i];
+         }
+         for (int i = spot1; i < spot2; i++) {
+            childU[i] = unrolledTwo[i];
+         }
+         for (int i = spot2; i < 44; i++) {
+            childU[i] = unrolledOne[i];
 
-          }
+         }
+
       }
-      
       for (int r = 0; r < 3; r++) {
          for (int c = 0; c < 4; c++) {
             double rand = Math.random();
@@ -368,18 +383,18 @@ public class Gladius {// Rotation is cw
          updateY();
          action = "forward";
          if (inCone == 1) {
-            fitness++;
+            fitness+=2;
          }
          break;
       }
       case 2: {
          action = "left";
-         rotation -= 5;
+         rotation -= 10;
          break;
       }
       case 3: {
          action = "right";
-         rotation += 5;
+         rotation += 10;
          break;
       }
       default:
@@ -528,36 +543,79 @@ public class Gladius {// Rotation is cw
       return spot;
    }
 
-   public void toStringMat() {
-      for (int i = 0; i < 3; i++) {
-         for (int j = 0; j < 4; j++) {
-            System.out.printf("%.2f ", (float) theta1[i][j]);
-         }
-         System.out.println();
-      }
-      System.out.println();
-      System.out.println();
+   public String toStringMat() {
+	   StringBuilder bob = new StringBuilder();
+	      for (int i = 0; i < 3; i++) {
+	         System.out.print("{");
+	         bob.append("{");
+	         for (int j = 0; j < 4; j++) {
+	            System.out.printf("%.6f ", (float) theta1[i][j]);
+	            Double gah = new Double(theta1[i][j]);
+	            bob.append(gah.toString().substring(0,9));
+	            if(j!=3)
+	            {
+	            System.out.print(", ");
+	            bob.append(", ");
+	         }
+	         }
+	         System.out.print("}");
+	         bob.append("}");
+	         bob.append(System.getProperty("line.separator"));
+	         System.out.println();
+	      }
+	      System.out.println();
+	      System.out.println();
+	      bob.append(System.getProperty("line.separator"));
+	      bob.append(System.getProperty("line.separator"));
+	      for (int i = 0; i < 4; i++) {
+	      System.out.print("{");
+	      bob.append("{");
+	         for (int j = 0; j < 4; j++) {
+	            System.out.printf("%.6f ", (float) theta2[i][j]);
+	            Double gah = new Double(theta2[i][j]);
+	            bob.append(gah.toString().substring(0,9));
+	            if(j!=3)
+	            {
+	            System.out.print(", ");
+	            bob.append(", ");
+	            }
+	         }
+	         System.out.print("}");
+	         bob.append("}");
+	         bob.append(System.getProperty("line.separator"));
+	         System.out.println();
+	      }
+	      System.out.println();
+	      System.out.println();
+	      bob.append(System.getProperty("line.separator"));
+	      bob.append(System.getProperty("line.separator"));
+	      for (int i = 0; i < 4; i++) {
+		      System.out.print("{");
+		      bob.append("{");
+		         for (int j = 0; j < 4; j++) {
+		            System.out.printf("%.6f ", (float) theta3[i][j]);
+		            Double gah = new Double(theta2[i][j]);
+		            bob.append(gah.toString().substring(0,9));
+		            if(j!=3)
+		            {
+		            System.out.print(", ");
+		            bob.append(", ");
+		            }
+		         }
+		         System.out.print("}");
+		         bob.append("}");
+		         bob.append(System.getProperty("line.separator"));
+		         System.out.println();
+		      }
+		      System.out.println();
+		      System.out.println();
+		      bob.append(System.getProperty("line.separator"));
+		      bob.append(System.getProperty("line.separator"));
+	      System.out.println("-----------------------");
+	      bob.append("----------------------------------------------");
+	      return bob.toString();
+	   }
 
-      for (int i = 0; i < 4; i++) {
-         for (int j = 0; j < 4; j++) {
-            System.out.printf("%.2f ", (float) theta2[i][j]);
-         }
-         System.out.println();
-      }
-      System.out.println();
-      System.out.println();
-
-      for (int i = 0; i < 4; i++) {
-         for (int j = 0; j < 4; j++) {
-            System.out.printf("%.2f ", (float) theta3[i][j]);
-         }
-         System.out.println();
-      }
-      System.out.println();
-      System.out.println();
-      System.out.println("-----------------------");
-
-   }
 
    public double[] sigmoid(double[] unactivated) {
       double[] activated = new double[4];
