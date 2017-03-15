@@ -1,0 +1,14 @@
+#BlueJ class context
+comment0.target=VisionCone
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ VisionCone\ here.\r\n\ Set\ alpha\ color\ stuff\r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=
+comment1.target=void\ act()
+comment2.params=rot
+comment2.target=void\ display(double)
+comment3.params=
+comment3.target=VisionCone()
+comment4.params=xx\ yy
+comment4.target=VisionCone(int,\ int)
+comment5.params=xx\ yy
+comment5.target=void\ setCoord(int,\ int)
+numComments=6
