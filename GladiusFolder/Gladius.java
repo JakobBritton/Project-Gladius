@@ -1,5 +1,3 @@
-
-
 import java.util.*;
 import java.awt.*;
 import java.io.File;
@@ -705,6 +703,13 @@ public class Gladius {// Rotation is cw
          activated[i] = 1.0 / (1.0 + Math.pow(Math.E, (-1 * unactivated[i])));
       }
       return activated;
+   }
+   
+	public Gladius clone()
+   {
+   
+      return new Gladius(x, y, rotation, worldW, worldH, name, theta1, theta2,
+         theta3, 0);
    }
 
 }
