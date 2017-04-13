@@ -1,0 +1,28 @@
+#BlueJ class context
+comment0.target=SingularValueDecomposition
+comment0.text=\ Singular\ Value\ Decomposition.\r\n\ \ \ <P>\r\n\ \ \ For\ an\ m-by-n\ matrix\ A\ with\ m\ >\=\ n,\ the\ singular\ value\ decomposition\ is\r\n\ \ \ an\ m-by-n\ orthogonal\ matrix\ U,\ an\ n-by-n\ diagonal\ matrix\ S,\ and\r\n\ \ \ an\ n-by-n\ orthogonal\ matrix\ V\ so\ that\ A\ \=\ U*S*V'.\r\n\ \ \ <P>\r\n\ \ \ The\ singular\ values,\ sigma[k]\ \=\ S[k][k],\ are\ ordered\ so\ that\r\n\ \ \ sigma[0]\ >\=\ sigma[1]\ >\=\ ...\ >\=\ sigma[n-1].\r\n\ \ \ <P>\r\n\ \ \ The\ singular\ value\ decompostion\ always\ exists,\ so\ the\ constructor\ will\r\n\ \ \ never\ fail.\ \ The\ matrix\ condition\ number\ and\ the\ effective\ numerical\r\n\ \ \ rank\ can\ be\ computed\ from\ this\ decomposition.\r\n
+comment1.params=Arg
+comment1.target=SingularValueDecomposition(Matrix)
+comment1.text=\ Construct\ the\ singular\ value\ decomposition\r\n\ \ \ \ \ \ \ Structure\ to\ access\ U,\ S\ and\ V.\r\n\ \ \ @param\ Arg\ \ \ \ Rectangular\ matrix\r\n
+comment2.params=
+comment2.target=Matrix\ getU()
+comment2.text=\ Return\ the\ left\ singular\ vectors\r\n\ \ \ @return\ \ \ \ \ U\r\n
+comment3.params=
+comment3.target=Matrix\ getV()
+comment3.text=\ Return\ the\ right\ singular\ vectors\r\n\ \ \ @return\ \ \ \ \ V\r\n
+comment4.params=
+comment4.target=double[]\ getSingularValues()
+comment4.text=\ Return\ the\ one-dimensional\ array\ of\ singular\ values\r\n\ \ \ @return\ \ \ \ \ diagonal\ of\ S.\r\n
+comment5.params=
+comment5.target=Matrix\ getS()
+comment5.text=\ Return\ the\ diagonal\ matrix\ of\ singular\ values\r\n\ \ \ @return\ \ \ \ \ S\r\n
+comment6.params=
+comment6.target=double\ norm2()
+comment6.text=\ Two\ norm\r\n\ \ \ @return\ \ \ \ \ max(S)\r\n
+comment7.params=
+comment7.target=double\ cond()
+comment7.text=\ Two\ norm\ condition\ number\r\n\ \ \ @return\ \ \ \ \ max(S)/min(S)\r\n
+comment8.params=
+comment8.target=int\ rank()
+comment8.text=\ Effective\ numerical\ matrix\ rank\r\n\ \ \ @return\ \ \ \ \ Number\ of\ nonnegligible\ singular\ values.\r\n
+numComments=9

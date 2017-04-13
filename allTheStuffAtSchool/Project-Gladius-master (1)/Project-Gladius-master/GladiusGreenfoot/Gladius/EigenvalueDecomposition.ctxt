@@ -1,0 +1,30 @@
+#BlueJ class context
+comment0.target=EigenvalueDecomposition
+comment0.text=\ Eigenvalues\ and\ eigenvectors\ of\ a\ real\ matrix.\ \r\n<P>\r\n\ \ \ \ If\ A\ is\ symmetric,\ then\ A\ \=\ V*D*V'\ where\ the\ eigenvalue\ matrix\ D\ is\r\n\ \ \ \ diagonal\ and\ the\ eigenvector\ matrix\ V\ is\ orthogonal.\r\n\ \ \ \ I.e.\ A\ \=\ V.times(D.times(V.transpose()))\ and\ \r\n\ \ \ \ V.times(V.transpose())\ equals\ the\ identity\ matrix.\r\n<P>\r\n\ \ \ \ If\ A\ is\ not\ symmetric,\ then\ the\ eigenvalue\ matrix\ D\ is\ block\ diagonal\r\n\ \ \ \ with\ the\ real\ eigenvalues\ in\ 1-by-1\ blocks\ and\ any\ complex\ eigenvalues,\r\n\ \ \ \ lambda\ +\ i*mu,\ in\ 2-by-2\ blocks,\ [lambda,\ mu;\ -mu,\ lambda].\ \ The\r\n\ \ \ \ columns\ of\ V\ represent\ the\ eigenvectors\ in\ the\ sense\ that\ A*V\ \=\ V*D,\r\n\ \ \ \ i.e.\ A.times(V)\ equals\ V.times(D).\ \ The\ matrix\ V\ may\ be\ badly\r\n\ \ \ \ conditioned,\ or\ even\ singular,\ so\ the\ validity\ of\ the\ equation\r\n\ \ \ \ A\ \=\ V*D*inverse(V)\ depends\ upon\ V.cond().\r\n
+comment1.params=
+comment1.target=void\ tred2()
+comment1.text=\ ------------------------\r\n\ \ \ Private\ Methods\r\n------------------------
+comment10.params=
+comment10.target=Matrix\ getD()
+comment10.text=\ Return\ the\ block\ diagonal\ eigenvalue\ matrix\r\n\ \ \ @return\ \ \ \ \ D\r\n
+comment2.params=
+comment2.target=void\ tql2()
+comment3.params=
+comment3.target=void\ orthes()
+comment4.params=xr\ xi\ yr\ yi
+comment4.target=void\ cdiv(double,\ double,\ double,\ double)
+comment5.params=
+comment5.target=void\ hqr2()
+comment6.params=Arg
+comment6.target=EigenvalueDecomposition(Matrix)
+comment6.text=\ Check\ for\ symmetry,\ then\ construct\ the\ eigenvalue\ decomposition\r\n\ \ \ \ \ \ \ Structure\ to\ access\ D\ and\ V.\r\n\ \ \ @param\ Arg\ \ \ \ Square\ matrix\r\n
+comment7.params=
+comment7.target=Matrix\ getV()
+comment7.text=\ Return\ the\ eigenvector\ matrix\r\n\ \ \ @return\ \ \ \ \ V\r\n
+comment8.params=
+comment8.target=double[]\ getRealEigenvalues()
+comment8.text=\ Return\ the\ real\ parts\ of\ the\ eigenvalues\r\n\ \ \ @return\ \ \ \ \ real(diag(D))\r\n
+comment9.params=
+comment9.target=double[]\ getImagEigenvalues()
+comment9.text=\ Return\ the\ imaginary\ parts\ of\ the\ eigenvalues\r\n\ \ \ @return\ \ \ \ \ imag(diag(D))\r\n
+numComments=11
